@@ -27,7 +27,7 @@ class TextEditor(QMainWindow):
         self.createMenus()
         self.createToolBars()
         self.createStatusBar()
-  
+
         self.resize(1800, 1200)
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
@@ -40,8 +40,6 @@ class TextEditor(QMainWindow):
         self.newFile()
         self.shortcut = QShortcut(QKeySequence('Esc'), self)
         self.shortcut.activated.connect(self.close)
-
-
 
     def createActions(self):
         self.newAct = QAction(QIcon('icons/new.png'), '&新建', self)
@@ -90,7 +88,7 @@ class TextEditor(QMainWindow):
         self.redoAct.triggered.connect(self.redo)
 
         # 全选，复制，剪切，粘贴
-        self.selectAllAct = QAction(QIcon('icons/all_act.png'),'全选', self)
+        self.selectAllAct = QAction(QIcon('icons/all_act.png'), '全选', self)
         self.selectAllAct.setShortcut('Ctrl+A')
         self.selectAllAct.triggered.connect(self.selectAll)
 
@@ -106,31 +104,28 @@ class TextEditor(QMainWindow):
         self.pasteAct.setShortcut('Ctrl+V')
         self.pasteAct.triggered.connect(self.paste)
 
-        #搜索
+        # 搜索
         self.searchAct = QAction(QIcon('icons/search.png'), '搜索', self)
         self.searchAct.setShortcut('Ctrl+F')
         self.searchAct.triggered.connect(self.search)
 
-        #打印
+        # 打印
         self.printAct = QAction(QIcon('icons/print.png'), '打印', self)
         self.printAct.setShortcut('Ctrl+P')
         self.printAct.triggered.connect(self.print)
-
 
     def print(self):
         activeSubWindow = self.mdi.activeSubWindow()
         if activeSubWindow:
             textEdit = activeSubWindow.widget()
             text = textEdit.toPlainText()
-            #调用打印机
+            # 调用打印机
             printer = QPrinter()
             printDialog = QPrintDialog(printer, self)
             if printDialog.exec_():
                 painter = QPainter(printer)
                 painter.drawText(10, 10, text)
                 painter.end()
-
-
 
     def createMenus(self):
         self.fileMenu = self.menuBar().addMenu('文件')
@@ -152,7 +147,6 @@ class TextEditor(QMainWindow):
         self.formatMenu.addAction(self.cutAct)
         self.formatMenu.addAction(self.pasteAct)
         self.formatMenu.addAction(self.searchAct)
-
 
         self.windowMenu = self.menuBar().addMenu('窗口')
         self.windowMenu.addAction(self.cascadeAct)
@@ -177,7 +171,6 @@ class TextEditor(QMainWindow):
         self.formatToolBar.addAction(self.cutAct)
         self.formatToolBar.addAction(self.pasteAct)
         self.formatToolBar.addAction(self.searchAct)
-
 
     def createStatusBar(self):
         self.statusBar = QStatusBar()
@@ -205,30 +198,28 @@ class TextEditor(QMainWindow):
         self.mdi.addSubWindow(sub)
         sub.showMaximized()
 
-
-
     def openFile(self, file_name):
         print(file_name)
         if file_name:
             try:
                 with open(file_name, 'r', encoding='utf-8') as file:
                     text1 = file.read()
-                    #让textEdit显示文件内容
+                    # 让textEdit显示文件内容
                     activeSubWindow = self.mdi.activeSubWindow()
                     if activeSubWindow:
                         self.textEdit = activeSubWindow.widget()
                         self.textEdit.setPlainText(text1)
                     self.textEdit.textChanged.connect(self.updateStatusBar)
                     print(text1)
-                #保存在history.json中
+                # 保存在history.json中
                 self.file_name = file_name
                 self.saveFile()
                 self.openFile_with_history()
             except FileNotFoundError:
                 text = ''
-                #给出消息框提示文件不存在
+                # 给出消息框提示文件不存在
                 QMessageBox.warning(self, '错误', '文件不存在')
-                #在history.json中删除不存在的文件
+                # 在history.json中删除不存在的文件
                 history = []
                 try:
                     with open('history.json', 'r', encoding='utf-8') as file:
@@ -243,7 +234,7 @@ class TextEditor(QMainWindow):
                             history.remove(file)
                             with open('history.json', 'w', encoding='utf-8') as file:
                                 json.dump(history, file)
-                    #刷新界面
+                    # 刷新界面
                     self.openFile_with_history()
         else:
             # 打开文件选取框
@@ -268,7 +259,6 @@ class TextEditor(QMainWindow):
         self.setWindowTitle(f'多文档文本编辑器 - {file_name}')
         self.file_name = file_name
         self.updateStatusBar()
-
 
     def openFile_with_history(self):
         history = []
@@ -295,14 +285,13 @@ class TextEditor(QMainWindow):
         self.openNewAct.triggered.connect(self.openFile)
         self.historyMenu.addAction(self.openNewAct)
 
-
     def saveFile(self):
         if self.file_name:
             activeSubWindow = self.mdi.activeSubWindow()
             if activeSubWindow:
                 try:
-                    #获取textEdit的内容
-                    #刷新textEdit
+                    # 获取textEdit的内容
+                    # 刷新textEdit
                     textEdit = activeSubWindow.widget()
                     text = textEdit.toPlainText()
                     print(text)
@@ -343,13 +332,11 @@ class TextEditor(QMainWindow):
         except Exception as e:
             pass
 
-
     def saveAsFile(self):
         options = QFileDialog.Options()
         fileName, _ = QFileDialog.getSaveFileName(self, "另存为", "", "Text Files (*.txt);;All Files (*)",
                                                   options=options)
         self.file_name = fileName
-
 
     def setFont(self):
         activeSubWindow = self.mdi.activeSubWindow()
@@ -359,7 +346,6 @@ class TextEditor(QMainWindow):
             if ok:
                 textEdit.setCurrentFont(font)
                 self.updateStatusBar()
-
 
     def setBold(self):
         activeSubWindow = self.mdi.activeSubWindow()
@@ -371,7 +357,6 @@ class TextEditor(QMainWindow):
                 textEdit.setFontWeight(QFont.Bold)
             self.updateStatusBar()
 
-
     def setItalic(self):
         activeSubWindow = self.mdi.activeSubWindow()
         if activeSubWindow:
@@ -379,7 +364,6 @@ class TextEditor(QMainWindow):
             state = textEdit.fontItalic()
             textEdit.setFontItalic(state)
             self.updateStatusBar()
-
 
     def updateStatusBar(self):
         activeSubWindow = self.mdi.activeSubWindow()
@@ -447,7 +431,7 @@ class TextEditor(QMainWindow):
             if ok:
                 index = text.find(search_text)
                 if index != -1:
-                    #将搜索内容选中
+                    # 将搜索内容选中
                     cursor = textEdit.textCursor()
                     cursor.setPosition(index)
                     cursor.setPosition(index + len(search_text), QTextCursor.KeepAnchor)
@@ -455,6 +439,7 @@ class TextEditor(QMainWindow):
 
                 else:
                     QMessageBox.information(self, '搜索', '未找到搜索内容')
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

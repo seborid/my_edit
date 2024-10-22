@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QToolBar, QAction, QMenu, QToolButton
 from PyQt5.QtCore import Qt
 
+
 class Example(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -39,10 +40,14 @@ class Example(QMainWindow):
 
     def option1_function(self):
         pass
+
     def option2_function(self):
         pass
+
     def option3_function(self):
         pass
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = Example()
