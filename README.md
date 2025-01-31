@@ -1,2 +1,5 @@
-this is a housework fo cumt cs
-use py 3.9.5 and PYQT5
+# cumt程序设计实践结课作业
+## my_edit（实现一个简单的文本编辑器）
+## 使用qt和chatgpt编写
+——————————————————————
+### 即使你有意见也不要提交issues（你看不下去难道我就看得下去吗）
